@@ -1,5 +1,3 @@
-from tabnanny import verbose
-
 from django.contrib.auth.models import AbstractUser
 from django.db import models
 
@@ -13,7 +11,7 @@ class CustomUser(AbstractUser):
         upload_to="users/avatars/",
         blank=True,
         null=True,
-        verbose_name="аватар",
+        verbose_name="Аватар",
         help_text="Загрузите аватар",
     )
     phone = models.CharField(
