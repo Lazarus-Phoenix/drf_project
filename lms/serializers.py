@@ -2,13 +2,17 @@ from rest_framework.serializers import ModelSerializer
 from rest_framework import serializers
 from lms.models import Course, Lesson
 
+class LessonSerializer(ModelSerializer):
+    class Meta:
+        model = Lesson
+        fields = ['id', 'title', 'description', 'course']
 
 class CourseSerializer(ModelSerializer):
     lessons_count = serializers.IntegerField(read_only=True)
-
+    lessons = LessonSerializer(many=True, read_only=True)
     class Meta:
         model = Course
-        fields = "__all__"
+        fields = ['id', 'name', 'description', 'lessons_count', 'lessons']
 
     def get_lessons_count(self, obj):
         try:
@@ -16,7 +20,3 @@ class CourseSerializer(ModelSerializer):
         except Course.DoesNotExist:
             return 0
 
-class LessonSerializer(ModelSerializer):
-    class Meta:
-        model = Lesson
-        fields = ['id', 'title', 'description', 'course']
