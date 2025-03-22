@@ -5,7 +5,8 @@ from lms.apps import LmsConfig
 from lms.views import (CourseViewSet, LessonCreateApiView,
                        LessonDestroyApiView, LessonListApiView,
                        LessonRetrieveApiView, LessonUpdateApiView,)
-from users.views import UserViewSet
+from users.views import UserViewSet, PaymentViewSet
+from lms.management.commands.clear_db import Command
 
 app_name = LmsConfig.name
 
@@ -21,6 +22,8 @@ urlpatterns = [
               ]
 
 router.register(r'courses', CourseViewSet, basename='courses')
+router.register(r"payments", PaymentViewSet, basename='payments')
 router.register(r'users', UserViewSet, basename='users')
+
 
 urlpatterns += router.urls
