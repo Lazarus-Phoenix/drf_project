@@ -1,1 +1,3 @@
-from pydantic import BaseModel, ConfigDict
+from django.contrib import admin
+
+# Register your models here.
