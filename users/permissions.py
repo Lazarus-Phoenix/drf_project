@@ -1,5 +1,6 @@
 from rest_framework import permissions
 
+
 class IsModer(permissions.BasePermission):
     message = "Вы не являетесь модератором"
 
@@ -17,5 +18,5 @@ class IsAdmin(permissions.BasePermission):
 class IsOwner(permissions.BasePermission):
     message = "Вы не являетесь владельцем запрашиваемого объекта"
 
-    def has_permission(self, request, view,obj):
+    def has_permission(self, request, view, obj):
         return obj.owner == request.user

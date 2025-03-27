@@ -13,4 +13,8 @@ class Command(BaseCommand):
         user.is_superuser = True
         user.is_staff = True
         user.save()
-        self.stdout.write(self.style.SUCCESS(f"Создан администратор\nemail для входа: {email}\nпароль: {password}"))
+        self.stdout.write(
+            self.style.SUCCESS(
+                f"Создан администратор\nemail для входа: {email}\nпароль: {password}"
+            )
+        )
