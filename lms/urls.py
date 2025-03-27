@@ -20,7 +20,7 @@ urlpatterns = [
     path("lesson/delete/<int:pk>/", LessonDestroyApiView.as_view(), name="delete"),
 ]
 
-router.register(r"courses", CourseViewSet, basename="courses")
+router.register("", CourseViewSet)
 router.register(r"payments", PaymentViewSet, basename="payments")
 router.register(r"users", UserViewSet, basename="users")
 
