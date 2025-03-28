@@ -18,5 +18,5 @@ class IsAdmin(permissions.BasePermission):
 class IsOwner(permissions.BasePermission):
     message = "Вы не являетесь владельцем запрашиваемого объекта"
 
-    def has_permission(self, request, view, obj):
+    def has_object_permission(self, request, view, obj):
         return obj.owner == request.user
