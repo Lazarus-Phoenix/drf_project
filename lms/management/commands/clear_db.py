@@ -1,9 +1,11 @@
 from django.core.management.base import BaseCommand
-from users.models import CustomUser, Payment
+
 from lms.models import Course, Lesson
+from users.models import CustomUser, Payment
+
 
 class Command(BaseCommand):
-    help = 'Clear database'
+    help = "Clear database"
 
     def handle(self, *args, **options):
         CustomUser.objects.all().delete()
@@ -11,4 +13,4 @@ class Command(BaseCommand):
         Lesson.objects.all().delete()
         Payment.objects.all().delete()
 
-        self.stdout.write(self.style.SUCCESS('Database cleared successfully'))
+        self.stdout.write(self.style.SUCCESS("Database cleared successfully"))
