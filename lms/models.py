@@ -1,5 +1,7 @@
 from django.db import models
 
+from config import settings
+
 
 class Course(models.Model):
     title = models.CharField(max_length=200, verbose_name="Название")
@@ -49,3 +51,19 @@ class Lesson(models.Model):
     class Meta:
         verbose_name = "Урок"
         verbose_name_plural = "Уроки"
+
+class CourseSubscription(models.Model):
+    user = models.ForeignKey(
+        settings.AUTH_USER_MODEL, on_delete=models.CASCADE, verbose_name="Пользователь"
+    )
+    course = models.ForeignKey(Course, on_delete=models.CASCADE, verbose_name="Курс")
+    created_at = models.DateTimeField(auto_now_add=True, verbose_name="Дата подписки")
+
+    class Meta:
+        unique_together = (
+            "user",
+            "course",
+        )  # Уникальность подписки для каждого пользователя и курса
+
+    def __str__(self):
+        return f"{self.user.email} подписан на {self.course.name}"
