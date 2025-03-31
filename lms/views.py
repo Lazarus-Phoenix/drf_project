@@ -81,3 +81,22 @@ class SubscribeToCourseView(CreateAPIView):
                 status=status.HTTP_400_BAD_REQUEST,
             )
 
+class UnsubscribeFromCourseView(DestroyAPIView):
+    permission_classes = [IsAuthenticated]
+
+    def delete(self, request, course_id):
+        course = get_object_or_404(Course, id=course_id)
+        try:
+            subscription = CourseSubscription.objects.get(
+                user=request.user, course=course
+            )
+            subscription.delete()
+            return Response(
+                {"message": "Вы успешно отписались от обновлений курса."},
+                status=status.HTTP_204_NO_CONTENT,
+            )
+        except CourseSubscription.DoesNotExist:
+            return Response(
+                {"message": "Вы не подписаны на обновления этого курса."},
+                status=status.HTTP_400_BAD_REQUEST,
+            )
