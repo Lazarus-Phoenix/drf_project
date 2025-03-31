@@ -85,8 +85,8 @@ class SubscribeToCourseView(CreateAPIView):
 class UnsubscribeFromCourseView(DestroyAPIView):
     permission_classes = [IsAuthenticated]
 
-    def delete(self, request, course_id):
-        course = get_object_or_404(Course, id=course_id)
+    def delete(self, request, pk):
+        course = get_object_or_404(Course, id=pk)
         try:
             subscription = CourseSubscription.objects.get(
                 user=request.user, course=course
