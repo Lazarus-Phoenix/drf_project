@@ -62,6 +62,7 @@ class LessonDestroyApiView(DestroyAPIView):
     serializer_class = LessonSerializer
     permission_classes = [IsAuthenticated, ~IsModer | IsAdmin | IsOwner]
 
+
 class SubscribeToCourseView(CreateAPIView):
     permission_classes = [IsAuthenticated]
 
