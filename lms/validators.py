@@ -12,6 +12,8 @@ class ExternalLinksValidator:
         self.field = field  # Добавлен аргумент field
 
     def __call__(self, value):
+        if not value:  # Пропускаем пустые значения
+            return
         url_pattern = r"(https?://[^\\s]+)"
         urls = re.findall(url_pattern, value)
 
