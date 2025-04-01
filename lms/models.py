@@ -1,6 +1,8 @@
 from django.db import models
-from lms.constants import USER_MODEL
+
 from config import settings
+from lms.constants import USER_MODEL
+
 # from users.models import CustomUser
 
 
@@ -19,9 +21,7 @@ class Course(models.Model):
         verbose_name="Владелец",
     )
     subscribers = models.ManyToManyField(
-        USER_MODEL,
-        related_name='subscribed_courses',
-        blank=True
+        USER_MODEL, related_name="subscribed_courses", blank=True
     )
 
     def __str__(self):
@@ -57,6 +57,7 @@ class Lesson(models.Model):
     class Meta:
         verbose_name = "Урок"
         verbose_name_plural = "Уроки"
+
 
 class CourseSubscription(models.Model):
     user = models.ForeignKey(

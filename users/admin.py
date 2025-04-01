@@ -10,6 +10,7 @@ class UserAdmin(admin.ModelAdmin):
     list_filter = ("email",)
     search_fields = ("email",)
 
+
 @admin.register(Payment)
 class PaymentAdmin(admin.ModelAdmin):
     list_display = (

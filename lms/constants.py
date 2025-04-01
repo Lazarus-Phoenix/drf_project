@@ -1,1 +1,1 @@
-USER_MODEL = 'users.CustomUser'
+USER_MODEL = "users.CustomUser"

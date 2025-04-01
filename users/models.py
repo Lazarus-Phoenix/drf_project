@@ -1,8 +1,8 @@
 from django.contrib.auth.models import AbstractUser
 from django.db import models
 
-from lms.models import Course, Lesson
 from lms.constants import USER_MODEL
+from lms.models import Course, Lesson
 
 
 class CustomUser(AbstractUser):
