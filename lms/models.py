@@ -1,6 +1,7 @@
 from django.db import models
-
+from lms.constants import USER_MODEL
 from config import settings
+# from users.models import CustomUser
 
 
 class Course(models.Model):
@@ -11,11 +12,16 @@ class Course(models.Model):
     description = models.TextField(blank=True, null=True, verbose_name="Описание")
 
     owner = models.ForeignKey(
-        "users.CustomUser",
+        USER_MODEL,
         on_delete=models.SET_NULL,
         blank=True,
         null=True,
         verbose_name="Владелец",
+    )
+    subscribers = models.ManyToManyField(
+        USER_MODEL,
+        related_name='subscribed_courses',
+        blank=True
     )
 
     def __str__(self):
@@ -38,7 +44,7 @@ class Lesson(models.Model):
     video_link = models.URLField(blank=True, null=True, verbose_name="Ссылка на видео")
 
     owner = models.ForeignKey(
-        "users.CustomUser",
+        USER_MODEL,
         on_delete=models.SET_NULL,
         blank=True,
         null=True,
