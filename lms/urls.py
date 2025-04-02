@@ -5,7 +5,8 @@ from lms.apps import LmsConfig
 from lms.management.commands.clear_db import Command
 from lms.views import (CourseViewSet, LessonCreateApiView,
                        LessonDestroyApiView, LessonListApiView,
-                       LessonRetrieveApiView, LessonUpdateApiView)
+                       LessonRetrieveApiView, LessonUpdateApiView,
+                       SubscribeToCourseView, UnsubscribeFromCourseView)
 from users.views import PaymentViewSet, UserViewSet
 
 app_name = LmsConfig.name
@@ -18,6 +19,16 @@ urlpatterns = [
     path("lesson/edit/<int:pk>/", LessonUpdateApiView.as_view(), name="edit"),
     path("lesson/<int:pk>/", LessonRetrieveApiView.as_view(), name="retrieve"),
     path("lesson/delete/<int:pk>/", LessonDestroyApiView.as_view(), name="delete"),
+    path(
+        "courses/<int:pk>/subscribe/",
+        SubscribeToCourseView.as_view(),
+        name="subscribe_to_course",
+    ),
+    path(
+        "courses/<int:pk>/unsubscribe/",
+        UnsubscribeFromCourseView.as_view(),
+        name="unsubscribe_from_course",
+    ),
 ]
 
 router.register("", CourseViewSet)

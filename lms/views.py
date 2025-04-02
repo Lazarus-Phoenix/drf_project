@@ -1,12 +1,14 @@
+from rest_framework import status
 from rest_framework.generics import (CreateAPIView, DestroyAPIView,
                                      ListAPIView, RetrieveAPIView,
-                                     UpdateAPIView)
+                                     UpdateAPIView, get_object_or_404)
+from rest_framework.permissions import IsAuthenticated
+from rest_framework.response import Response
 from rest_framework.viewsets import ModelViewSet
 
-from lms.models import Course, Lesson
+from lms.models import Course, CourseSubscription, Lesson
 from lms.serializers import CourseSerializer, LessonSerializer
 from users.permissions import IsAdmin, IsModer, IsOwner
-from rest_framework.permissions import IsAuthenticated
 
 
 class CourseViewSet(ModelViewSet):
@@ -16,8 +18,11 @@ class CourseViewSet(ModelViewSet):
     def get_permissions(self):
         if self.action == "create":
             self.permission_classes = (IsAuthenticated, ~IsModer)
-        elif self.action in ["update", "retrieve","list"]:
-            self.permission_classes = (IsAuthenticated, IsModer | IsOwner | IsAdmin,)
+        elif self.action in ["update", "retrieve", "list"]:
+            self.permission_classes = (
+                IsAuthenticated,
+                IsModer | IsOwner | IsAdmin,
+            )
         if self.action == "destroy":
             self.permission_classes = (IsAuthenticated, ~IsModer, IsOwner | IsAdmin)
         return super().get_permissions()
@@ -59,3 +64,44 @@ class LessonDestroyApiView(DestroyAPIView):
     queryset = Lesson.objects.all()
     serializer_class = LessonSerializer
     permission_classes = [IsAuthenticated, ~IsModer | IsAdmin | IsOwner]
+
+
+class SubscribeToCourseView(CreateAPIView):
+    permission_classes = [IsAuthenticated]
+
+    def post(self, request, pk):
+        course = get_object_or_404(Course, id=pk)
+        subscription, created = CourseSubscription.objects.get_or_create(
+            user=request.user, course=course
+        )
+        if created:
+            return Response(
+                {"message": "Вы успешно подписались на обновления курса."},
+                status=status.HTTP_201_CREATED,
+            )
+        else:
+            return Response(
+                {"message": "Вы уже подписаны на обновления этого курса."},
+                status=status.HTTP_400_BAD_REQUEST,
+            )
+
+
+class UnsubscribeFromCourseView(DestroyAPIView):
+    permission_classes = [IsAuthenticated]
+
+    def delete(self, request, pk):
+        course = get_object_or_404(Course, id=pk)
+        try:
+            subscription = CourseSubscription.objects.get(
+                user=request.user, course=course
+            )
+            subscription.delete()
+            return Response(
+                {"message": "Вы успешно отписались от обновлений курса."},
+                status=status.HTTP_204_NO_CONTENT,
+            )
+        except CourseSubscription.DoesNotExist:
+            return Response(
+                {"message": "Вы не подписаны на обновления этого курса."},
+                status=status.HTTP_400_BAD_REQUEST,
+            )
