@@ -3,10 +3,16 @@ from rest_framework.routers import SimpleRouter
 
 from lms.apps import LmsConfig
 from lms.management.commands.clear_db import Command
-from lms.views import (CourseViewSet, LessonCreateApiView,
-                       LessonDestroyApiView, LessonListApiView,
-                       LessonRetrieveApiView, LessonUpdateApiView,
-                       SubscribeToCourseView, UnsubscribeFromCourseView)
+from lms.views import (
+    CourseViewSet,
+    LessonCreateApiView,
+    LessonDestroyApiView,
+    LessonListApiView,
+    LessonRetrieveApiView,
+    LessonUpdateApiView,
+    SubscribeToCourseView,
+    UnsubscribeFromCourseView,
+)
 from users.views import PaymentViewSet, UserViewSet
 
 app_name = LmsConfig.name
