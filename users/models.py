@@ -72,7 +72,9 @@ class Payment(models.Model):
     )
     amount = models.DecimalField(max_digits=10, decimal_places=2, verbose_name="Сумма")
     payment_method = models.CharField(
-        max_length=10, choices=PAYMENT_METHOD_CHOICES, verbose_name="метод оплаты"
+        max_length=30,
+        choices=PAYMENT_METHOD_CHOICES,
+        verbose_name="метод оплаты"
     )
     session_id = models.CharField(
         max_length=255,
