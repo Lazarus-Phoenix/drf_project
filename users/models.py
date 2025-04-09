@@ -44,9 +44,12 @@ class CustomUser(AbstractUser):
 
 
 class Payment(models.Model):
-    PAYMENT_METHOD_CHOICES = [
-        ("cash", "Наличные"),
-        ("transfer", "Перевод на счет"),
+    CASH = "Наличные"
+    TRANSFER = "pm_card_visa"
+
+    STATUS_CHOICES = [
+        (CASH, "Наличные"),
+        (TRANSFER, "Перевод на счет"),
     ]
 
     user = models.ForeignKey(
@@ -73,8 +76,9 @@ class Payment(models.Model):
     amount = models.DecimalField(max_digits=10, decimal_places=2, verbose_name="Сумма")
     payment_method = models.CharField(
         max_length=30,
-        choices=PAYMENT_METHOD_CHOICES,
-        verbose_name="метод оплаты"
+        choices=STATUS_CHOICES,
+        default=TRANSFER,
+        verbose_name="метод оплаты",
     )
     session_id = models.CharField(
         max_length=255,

@@ -6,7 +6,7 @@ authors = ["Dmitry_Bezgubov <dmitrij-bezgubov@yandex.ru>"]
 readme = "README.md"
 
 [tool.poetry.dependencies]
-python = "^3.10"
+python = "^3.11"
 django = "^5.1.7"
 psycopg2-binary = "^2.9.10"
 pillow = "^11.1.0"
@@ -19,6 +19,8 @@ djangorestframework-simplejwt = "^5.5.0"
 coverage = "^7.8.0"
 drf-yasg = "^1.21.10"
 forex-python = "^1.8"
+requires = "^0.10.5"
+ipython = "^9.1.0"
 
 
 [build-system]

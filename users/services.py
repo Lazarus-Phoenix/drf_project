@@ -4,18 +4,20 @@ from config.settings import STRIPE_API_KEY
 stripe.api_key = STRIPE_API_KEY
 
 
+def create_stripe_product(name):
+
+    product = stripe.Product.create(name=name)
+
+    return product.get("id")
+
+
 def create_stripe_price(amount):
     """Создает цену в stripe"""
     return stripe.Price.create(
         currency="rub",
-        unit_amount= int(amount * 100),
+        unit_amount=int(amount * 100),
         product_data={"name": "Payment"},
     )
-
-
-def create_stripe_product(product):
-    """Создает продукт в stripe"""
-    return stripe.Product.create(name=product)
 
 
 def create_stripe_session(price):
