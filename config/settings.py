@@ -1,8 +1,6 @@
 import os
 from datetime import timedelta
 from pathlib import Path
-
-from django.conf.global_settings import AUTH_USER_MODEL, MEDIA_ROOT, MEDIA_URL
 from dotenv import load_dotenv
 
 load_dotenv(override=True)
@@ -10,6 +8,7 @@ load_dotenv(override=True)
 BASE_DIR = Path(__file__).resolve().parent.parent
 
 SECRET_KEY = os.getenv("SECRET_KEY")
+STRIPE_API_KEY = os.getenv("STRIPE_API_KEY")
 
 DEBUG = True
 
@@ -21,12 +20,13 @@ INSTALLED_APPS = [
     "django.contrib.contenttypes",
     "django.contrib.sessions",
     "django.contrib.messages",
-    "django.contrib.staticfiles",
     "rest_framework",
     "rest_framework_simplejwt",
     "django_filters",
     "users",
     "lms",
+    "django.contrib.staticfiles",  # required for serving swagger ui's css/js files
+    "drf_yasg",
 ]
 
 MIDDLEWARE = [
@@ -107,6 +107,7 @@ USE_TZ = True
 
 
 STATIC_URL = "static/"
+STATICFILES_DIRS = (BASE_DIR / "static",)
 
 MEDIA_URL = "media/"
 MEDIA_ROOT = os.path.join(BASE_DIR, "media")
