@@ -6,15 +6,7 @@ from users.models import CustomUser, Payment
 class PaymentSerializer(ModelSerializer):
     class Meta:
         model = Payment
-        fields = [
-            "id",
-            "user",
-            "payment_date",
-            "paid_course",
-            "paid_lesson",
-            "amount",
-            "payment_method",
-        ]
+        fields = "__all__"
 
 
 class UserSerializer(ModelSerializer):
@@ -22,4 +14,5 @@ class UserSerializer(ModelSerializer):
 
     class Meta:
         model = CustomUser
-        fields = ["id", "email", "phone", "city", "avatar", "payments", "password"]
+        fields = "__all__"
+        # fields = ["id", "email", "phone", "city", "avatar", "payments", "password"]
