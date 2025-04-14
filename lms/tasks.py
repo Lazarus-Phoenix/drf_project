@@ -35,7 +35,7 @@ def send_course_update_email(course_id):
                 fail_silently=False,
             )
     else:
-        print(f'Уведомление не отправлено, курс был обновлен менее 4 часов назад.')
+        print(f"Уведомление не отправлено, курс был обновлен менее 4 часов назад.")
 
 
 @shared_task

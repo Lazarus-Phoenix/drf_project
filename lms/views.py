@@ -19,6 +19,7 @@ from users.permissions import IsAdmin, IsModer, IsOwner
 from .paginators import MyCustomPagination
 from .tasks import send_course_update_email
 
+
 @method_decorator(
     name="list",
     decorator=swagger_auto_schema(operation_description="Мое custom описание"),
@@ -73,11 +74,13 @@ class LessonCreateApiView(CreateAPIView):
         if lesson:
             send_course_update_email.delay(lesson.course_id)
 
+
 class LessonListApiView(ListAPIView):
     queryset = Lesson.objects.all()
     serializer_class = LessonSerializer
     permission_classes = [IsAuthenticated, IsAdmin | IsModer | IsOwner]
     pagination_class = MyCustomPagination
+
 
 class LessonUpdateApiView(UpdateAPIView):
     queryset = Lesson.objects.all()
