@@ -27,6 +27,7 @@ INSTALLED_APPS = [
     "lms",
     "django.contrib.staticfiles",  # required for serving swagger ui's css/js files
     "drf_yasg",
+    "django_celery_beat",
 ]
 
 MIDDLEWARE = [
