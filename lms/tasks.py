@@ -38,9 +38,3 @@ def send_course_update_email(course_id):
         print(f"Уведомление не отправлено, курс был обновлен менее 4 часов назад.")
 
 
-@shared_task
-def block_inactive_users():
-    """Заблокировать пользователей, не активных в течение месяца"""
-    month_ago = timezone.now() - timedelta(days=30)
-    inactive_users = CustomUser.objects.filter(last_login__lt=month_ago, is_active=True)
-    inactive_users.update(is_active=False)
