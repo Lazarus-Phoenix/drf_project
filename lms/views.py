@@ -16,6 +16,8 @@ from rest_framework.viewsets import ModelViewSet
 from lms.models import Course, CourseSubscription, Lesson
 from lms.serializers import CourseSerializer, LessonSerializer
 from users.permissions import IsAdmin, IsModer, IsOwner
+from .paginators import MyCustomPagination
+from .tasks import send_course_update_email
 
 
 @method_decorator(
@@ -38,9 +40,27 @@ class CourseViewSet(ModelViewSet):
             self.permission_classes = (IsAuthenticated, ~IsModer, IsOwner | IsAdmin)
         return super().get_permissions()
 
+    # def perform_create(self, serializer):
+    #     course = serializer.save(owner=self.request.user)
+    #     course.save()
+
     def perform_create(self, serializer):
         course = serializer.save(owner=self.request.user)
         course.save()
+        if course:
+            send_course_update_email.delay(course.id)
+
+    def perform_update(self, serializer):
+        course = serializer.save()
+        course.save()
+        if course:
+            send_course_update_email.delay(course.id)
+
+    def perform_destroy(self, serializer):
+        course = serializer.save()
+        if course:
+            send_course_update_email.delay(course.id)
+        course.delete()
 
 
 class LessonCreateApiView(CreateAPIView):
@@ -51,18 +71,28 @@ class LessonCreateApiView(CreateAPIView):
     def perform_create(self, serializer):
         lesson = serializer.save(owner=self.request.user)
         lesson.save()
+        if lesson:
+            send_course_update_email.delay(lesson.course_id)
 
 
 class LessonListApiView(ListAPIView):
     queryset = Lesson.objects.all()
     serializer_class = LessonSerializer
     permission_classes = [IsAuthenticated, IsAdmin | IsModer | IsOwner]
+    pagination_class = MyCustomPagination
 
 
 class LessonUpdateApiView(UpdateAPIView):
     queryset = Lesson.objects.all()
     serializer_class = LessonSerializer
     permission_classes = [IsAuthenticated, IsAdmin | IsModer | IsOwner]
+
+    def perform_update(self, serializer):
+        lesson = serializer.save(owner=self.request.user)
+        lesson.save()
+
+        if lesson:
+            send_course_update_email.delay(lesson.course_id)
 
 
 class LessonRetrieveApiView(RetrieveAPIView):
@@ -75,6 +105,10 @@ class LessonDestroyApiView(DestroyAPIView):
     queryset = Lesson.objects.all()
     serializer_class = LessonSerializer
     permission_classes = [IsAuthenticated, ~IsModer | IsAdmin | IsOwner]
+
+    def perform_destroy(self, instance):
+        send_course_update_email.delay(instance.course_id)
+        instance.delete()
 
 
 class SubscribeToCourseView(CreateAPIView):
