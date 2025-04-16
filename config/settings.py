@@ -27,6 +27,7 @@ INSTALLED_APPS = [
     "lms",
     "django.contrib.staticfiles",  # required for serving swagger ui's css/js files
     "drf_yasg",
+    "django_celery_beat",
 ]
 
 MIDDLEWARE = [
@@ -117,6 +118,20 @@ DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
 AUTH_USER_MODEL = "users.CustomUser"
 
+EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
+EMAIL_HOST = "smtp.yandex.ru"
+EMAIL_PORT = 587
+# EMAIL_PORT = 465
+EMAIL_USE_TLS = True
+EMAIL_USE_SSL = False
+EMAIL_HOST_USER = "dmitrij-bezgubov@yandex.ru"
+EMAIL_HOST_PASSWORD = os.getenv("EMAIL_HOST_PASSWORD")
+
+DEFAULT_FROM_EMAIL = EMAIL_HOST_USER
+
+SERVER_EMAIL = EMAIL_HOST_USER  # - это адрес электронной почты,
+# который Django будет использовать для отправки системных сообщений и уведомлений об ошибках
+
 REST_FRAMEWORK = {
     "DEFAULT_FILTER_BACKENDS": ["django_filters.rest_framework.DjangoFilterBackend"],
     "DEFAULT_AUTHENTICATION_CLASSES": (
@@ -135,4 +150,50 @@ REST_FRAMEWORK = {
 SIMPLE_JWT = {
     "ACCESS_TOKEN_LIFETIME": timedelta(minutes=300),
     "REFRESH_TOKEN_LIFETIME": timedelta(days=1),
+}
+
+
+# Настройки для Celery
+
+# URL-адрес брокера сообщений
+CELERY_BROKER_URL = os.getenv(
+    "CELERY_BROKER_URL"
+)  # Например, Redis, который по умолчанию работает на порту 6379
+
+# URL-адрес брокера результатов, также Redis
+CELERY_RESULT_BACKEND = os.getenv("CELERY_RESULT_BACKEND")
+
+# Часовой пояс для работы Celery
+CELERY_TIMEZONE = TIME_ZONE
+
+# Флаг отслеживания выполнения задач
+CELERY_TASK_TRACK_STARTED = True
+
+# CELERY_ACCEPT_CONTENT = ['json']
+# CELERY_TASK_SERIALIZER = 'json'
+# CELERY_RESULT_SERIALIZER = 'json'
+
+# Максимальное время на выполнение задачи
+CELERY_TASK_TIME_LIMIT = 30 * 60
+"""
+DatabaseScheduler хранит все расписания задач в базе данных Django.
+Это позволяет управлять задачами через административную панель Django и изменять расписание в реальном времени.
+"""
+CELERY_BEAT_SCHEDULER = "django_celery_beat.schedulers:DatabaseScheduler"
+
+"""
+PersistentScheduler хранит расписание в локальном файле celerybeat-schedule.
+Это простой вариант, но менее гибкий в управлении задачами.
+"""
+# CELERY_BEAT_SCHEDULER = "celery.beat.PersistentScheduler"
+
+"""
+Запуск задачи раз в день при работающем CELERY
+"""
+
+CELERY_BEAT_SCHEDULE = {
+    "check_last_login": {
+        "task": "users.tasks.check_last_login",
+        "schedule": timedelta(days=1),
+    },
 }
