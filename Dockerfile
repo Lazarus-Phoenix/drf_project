@@ -1,33 +1,41 @@
-FROM python:3.12-slim as builder
-
-# Установка Poetry и настройка переменных окружения
-RUN pip install poetry==1.4.2
-
-ENV POETRY_NO_INTERACTION=1 \
-    POETRY_VIRTUALENVS_IN_PROJECT=1 \
-    POETRY_VIRTUALENVS_CREATE=1 \
-    POETRY_CACHE_DIR=/tmp/poetry_cache
-
-WORKDIR /app
-
-# Копируем только файлы конфигурации
-COPY pyproject.toml poetry.lock ./
-
-# Устанавливаем зависимости без разработки
-RUN poetry install --without dev --no-root && rm -rf $POETRY_CACHE_DIR
-
-# Создаем финальный образ
+# Указываем базовый образ
 FROM python:3.12-slim
 
-ENV VIRTUAL_ENV=/app/.venv \
-    PATH="/app/.venv/bin:$PATH"
 
-# Копируем виртуальное окружение из сборочного образа
-COPY --from=builder ${VIRTUAL_ENV} ${VIRTUAL_ENV}
+# Устанавливаем рабочую директорию в контейнере
+WORKDIR /drf_project
 
-# Копируем приложение
+RUN apt-get update && \
+       apt-get install -y gcc libpq-dev && \
+       apt-get clean && \
+       rm -rf /var/lib/apt/lists/*
+
+# Устанавливаем Poetry
+RUN pip install poetry
+
+# Копируем файлы зависимостей
+COPY poetry.lock ./
+COPY pyproject.toml ./
+
+# Устанавливаем зависимости с помощью Poetry
+RUN poetry install --no-root
+
+# Копируем остальные файлы проекта в контейнер
 COPY . .
 
+# Настройка переменных окружения
+ENV PYTHONUNBUFFERED=1
+ENV PYTHONDONTWRITEBYTECODE=1
+
+
+# Создаем директорию для медиафайлов
+RUN mkdir -p /drf_project/staticfiles && chmod -R 755 /drf_project/staticfiles
+
+# Открываем порт 8000 для взаимодействия с приложением
 EXPOSE 8000
 
-CMD ["python", "manage.py", "runserver", "0.0.0.0:8000"]
+# # Запуск команды
+# CMD ["poetry", "run", "gunicorn", "config.wsgi:application", "--bind", "0.0.0.0:8000"]
+
+# Определяем команду для запуска приложения
+CMD ["poetry", "run", "python", "manage.py", "runserver", "0.0.0.0:8000"]

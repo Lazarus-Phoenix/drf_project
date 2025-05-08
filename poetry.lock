@@ -484,14 +484,14 @@ files = [
 
 [[package]]
 name = "django"
-version = "5.2"
+version = "5.2.1"
 description = "A high-level Python web framework that encourages rapid development and clean, pragmatic design."
 optional = false
 python-versions = ">=3.10"
 groups = ["main"]
 files = [
-    {file = "Django-5.2-py3-none-any.whl", hash = "sha256:91ceed4e3a6db5aedced65e3c8f963118ea9ba753fc620831c77074e620e7d83"},
-    {file = "Django-5.2.tar.gz", hash = "sha256:1a47f7a7a3d43ce64570d350e008d2949abe8c7e21737b351b6a1611277c6d89"},
+    {file = "django-5.2.1-py3-none-any.whl", hash = "sha256:a9b680e84f9a0e71da83e399f1e922e1ab37b2173ced046b541c72e1589a5961"},
+    {file = "django-5.2.1.tar.gz", hash = "sha256:57fe1f1b59462caed092c80b3dd324fd92161b620d59a9ba9181c34746c97284"},
 ]
 
 [package.dependencies]
@@ -1579,6 +1579,22 @@ pure-eval = "*"
 tests = ["cython", "littleutils", "pygments", "pytest", "typeguard"]
 
 [[package]]
+name = "stripe"
+version = "6.7.0"
+description = "Python bindings for the Stripe API"
+optional = false
+python-versions = ">=3.6"
+groups = ["main"]
+files = [
+    {file = "stripe-6.7.0-py2.py3-none-any.whl", hash = "sha256:a453d6daa633f656297a9323c736fdcb53164418d643fdc30499a6d32ad7933c"},
+    {file = "stripe-6.7.0.tar.gz", hash = "sha256:2794ccc4b4c97070d1cab4385e1d2aad65937b4437b75cc1faf7d67dda8199f4"},
+]
+
+[package.dependencies]
+requests = {version = ">=2.20", markers = "python_version >= \"3.0\""}
+typing-extensions = {version = ">=4.0.0", markers = "python_version >= \"3.7\""}
+
+[[package]]
 name = "traitlets"
 version = "5.14.3"
 description = "Traitlets Python configuration system"
@@ -1691,4 +1707,4 @@ typing-extensions = ">=4.12.2"
 [metadata]
 lock-version = "2.1"
 python-versions = "^3.11"
-content-hash = "252de8db94b8fea519be882ac8ad7204b359c3cff2b8e913e9ecc2860b6a6ef0"
+content-hash = "188944966b5c9b168175c90b3076cdb732f7b56d439ed829f741e593c3b680a4"
