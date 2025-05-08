@@ -1,10 +1,10 @@
 version: "3.9"
 
 services:
-  drf_project:
-    build: .
-#      context: .
-#      dockerfile: Dockerfile
+  web:
+    build:
+      context: .
+      dockerfile: Dockerfile
     command: sh -c "poetry run python manage.py migrate && python manage.py runserver 0.0.0.0:8000"
     volumes:
       - .:/drf_project
@@ -15,12 +15,12 @@ services:
       db:
         condition: service_healthy
     env_file:
-      - .env
+      - ./.env
 
   db:
     image: postgres
     env_file:
-      - .env
+      - ./.env
     volumes:
       - pg_data:/var/lib/postgresql/data
     expose:
@@ -34,7 +34,7 @@ services:
   redis:
     image: redis:alpine
     volumes:
-      - .:/redisdata:/data
+      - redis_data:/data
 #    ports:
 #    - "6379:6379"
     healthcheck:
@@ -53,8 +53,8 @@ services:
     depends_on:
       - redis
       - db
-    environment:
-      - CELERY_BROKER_URL=redis://redis:6379/0
+    env_file:
+      - ./.env
 
   celery-beat:
     build: .
@@ -66,8 +66,8 @@ services:
     depends_on:
       - redis
       - db
-    environment:
-      - CELERY_BROKER_URL=redis://redis:6379/0
+    env_file:
+      - ./.env
 
 
 volumes:

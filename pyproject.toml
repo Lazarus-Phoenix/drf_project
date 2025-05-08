@@ -27,6 +27,7 @@ django-celery-beat = "^2.7.0"
 #django-filter = {git = "https://github.com/carltongibson/django-filter.git"}
 django-filter = "^23.3"
 stripe = "^6.0"
+gevent = "^25.4.2"
 
 [build-system]
 requires = ["poetry-core"]
