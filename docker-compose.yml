@@ -2,12 +2,13 @@ version: "3.9"
 
 services:
   drf_project:
-    build:
-      context: .
-      dockerfile: Dockerfile
-    command: sh -c "poetry run python manage.py collectstatic --noinput && poetry run gunicorn drf_project.wsgi:application --bind 0.0.0.0:8000"
+    build: .
+#      context: .
+#      dockerfile: Dockerfile
+    command: sh -c "poetry run python manage.py migrate && python manage.py runserver 0.0.0.0:8000"
     volumes:
       - .:/drf_project
+      - static_volume:/code/static
     ports:
       - "8000:8000"
     depends_on:
@@ -17,7 +18,7 @@ services:
       - .env
 
   db:
-    image: postgres:16-alpine
+    image: postgres
     env_file:
       - .env
     volumes:
@@ -32,35 +33,44 @@ services:
 
   redis:
     image: redis:alpine
-    ports:
-    - "6379:6379"
+    volumes:
+      - .:/redisdata:/data
+#    ports:
+#    - "6379:6379"
+    healthcheck:
+      test: [ "CMD-SHELL", "redis-cli ping | grep PONG" ]
+      interval: 1s
+      timeout: 3s
+      retries: 5
 
   celery:
     build: .
     command:
-      poetry run celery -A drf_project worker -l INFO --concurrency=500 --pool=gevent
+      poetry run celery -A config worker -l INFO --concurrency=500 --pool=gevent
     restart: on-failure
     volumes:
       - .:/drf_project
     depends_on:
       - redis
       - db
-    env_file:
-      - .env
+    environment:
+      - CELERY_BROKER_URL=redis://redis:6379/0
 
   celery-beat:
     build: .
     command:
-      poetry run celery -A -A drf_project beat --loglevel=info
+      poetry run celery -A config beat --loglevel=info
     restart: on-failure
     volumes:
       - .:/drf_project
     depends_on:
       - redis
       - db
-    env_file:
-      - .env
+    environment:
+      - CELERY_BROKER_URL=redis://redis:6379/0
 
 
 volumes:
   pg_data:
+  static_volume:
+  redis_data:
