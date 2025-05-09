@@ -2,7 +2,9 @@
 ## Домашняя работа к модулю 9
 ___
 ## Запуск Docker Compose локально 
-```docker compose up -d --build```  Обязательно учитывайте что весь проект в т.ч. docker работают в окружении Poetry !!!
+введите в терминале : <br>
+```docker compose up -d --build``` <br>
+Обязательно учитывайте что весь проект в т.ч. docker работают в окружении Poetry !!!
  ## Результат работы:
 ![dz_docker_compose.png](static/media/dz_docker_compose.png)
 
