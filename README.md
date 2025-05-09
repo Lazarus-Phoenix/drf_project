@@ -1,7 +1,8 @@
 # Тема 34.2 Docker Compose
 ## Домашняя работа к модулю 9
 ___
-## Запуск Docker Compose локально ```docker compose up -d --build``` 
+## Запуск Docker Compose локально 
+```docker compose up -d --build``` 
  ## Результат работы:
 ![dz_docker_compose.png](static/media/dz_docker_compose.png)
 
