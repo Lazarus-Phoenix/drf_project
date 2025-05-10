@@ -36,5 +36,3 @@ def send_course_update_email(course_id):
             )
     else:
         print(f"Уведомление не отправлено, курс был обновлен менее 4 часов назад.")
-
-

@@ -1,0 +1,73 @@
+services:
+  web:
+    build:
+      dockerfile: Dockerfile
+    command: poetry run python manage.py runserver 0.0.0.0:8000
+    volumes:
+      - .:/drf_project
+      - static_volume:/drf_project/staticfiles/
+    ports:
+      - "8000:8000"
+    depends_on:
+      db:
+        condition: service_healthy
+      redis:
+        condition: service_started
+    env_file:
+      - ./.env
+
+  db:
+    image: postgres
+    env_file:
+      - ./.env
+    volumes:
+      - pg_data:/var/lib/postgresql/data
+    expose:
+      - "5432"
+    healthcheck:
+      test: [ 'CMD-SHELL', '-c', 'pg_isready -U skypro -d drf_learn' ]
+      interval: 10s
+      retries: 5
+      timeout: 5s
+
+  redis:
+    image: redis:alpine
+    volumes:
+      - redis_data:/data
+    healthcheck:
+      test: [ "CMD-SHELL", "redis-cli ping | grep PONG" ]
+      interval: 1s
+      timeout: 3s
+      retries: 5
+
+  celery:
+    build: .
+    command:
+      poetry run celery -A config worker -l INFO --concurrency=500 --pool=gevent
+    restart: on-failure
+    volumes:
+      - .:/drf_project
+    depends_on:
+      - redis
+      - db
+    env_file:
+      - ./.env
+
+  celery-beat:
+    build: .
+    command:
+      poetry run celery -A config beat --loglevel=info
+    restart: on-failure
+    volumes:
+      - .:/drf_project
+    depends_on:
+      - redis
+      - db
+    env_file:
+      - ./.env
+
+
+volumes:
+  pg_data:
+  static_volume:
+  redis_data:
