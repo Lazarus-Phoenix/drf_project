@@ -35,7 +35,7 @@ RUN mkdir -p /drf_project/staticfiles && chmod -R 755 /drf_project/staticfiles
 EXPOSE 8000
 
 # Запуск команды
-CMD ["poetry", "run", "gunicorn", "config.wsgi:application", "--bind", "0.0.0.0:8000"]
+# CMD ["poetry", "run", "gunicorn", "config.wsgi:application", "--bind", "0.0.0.0:8000"]
 
 # Определяем команду для запуска приложения
 # CMD ["poetry", "run", "python", "manage.py", "runserver", "0.0.0.0:8000"]
