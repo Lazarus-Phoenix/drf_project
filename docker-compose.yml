@@ -7,8 +7,10 @@ services:
     volumes:
       - .:/drf_project
       - static_volume:/drf_project/staticfiles/
-    ports:
-      - "8000:8000"
+#    ports:
+#      - "8000:8000"
+    expose:
+      - "8000"
     depends_on:
       db:
         condition: service_healthy
