@@ -1,4 +1,5 @@
 import os
+import sys
 from datetime import timedelta
 from pathlib import Path
 from dotenv import load_dotenv
@@ -28,6 +29,7 @@ INSTALLED_APPS = [
     "django.contrib.staticfiles",  # required for serving swagger ui's css/js files
     "drf_yasg",
     "django_celery_beat",
+    "celery",
 ]
 
 MIDDLEWARE = [
@@ -201,3 +203,24 @@ CELERY_BEAT_SCHEDULE = {
         "schedule": timedelta(days=1),
     },
 }
+
+CACHES = {
+    "default": {
+        "BACKEND": "django.core.cache.backends.redis.RedisCache",
+        "LOCATION": "redis://redis:6379/1",  # Используем БД 1 (не 0 как для Celery)
+        "OPTIONS": {
+            "CLIENT_CLASS": "django_redis.client.DefaultClient",
+            "SOCKET_CONNECT_TIMEOUT": 5,  # Таймаут подключения в секундах
+            "SOCKET_TIMEOUT": 5,          # Таймаут операций
+            "IGNORE_EXCEPTIONS": True,    # Продолжать работу при ошибках Redis
+        }
+    }
+}
+
+if 'test' in sys.argv:
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.sqlite3',
+            'NAME':BASE_DIR / 'test_db.sqlite3'
+        }
+    }
