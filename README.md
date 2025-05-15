@@ -8,7 +8,7 @@ ___
 ![dz_docker_compose.png](static/media/dz_docker_compose.png)
 
 ---
- ## Структура контейнеров
+ ## Структура контейнеров.
  
  ✔ web <br>
  ✔ db <br>
