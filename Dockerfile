@@ -20,6 +20,8 @@ COPY pyproject.toml ./
 
 # Устанавливаем зависимости с помощью Poetry
 RUN poetry install --no-root
+    poetry config virtualenvs.create false && \
+    poetry install --no-interaction --no-ansi
 
 # Копируем остальные файлы проекта в контейнер
 COPY . .
