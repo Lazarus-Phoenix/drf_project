@@ -97,3 +97,4 @@ volumes:
   pg_data:
   static_volume:
   redis_data:
+  celerybeat_volume:
