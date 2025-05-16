@@ -72,10 +72,10 @@ services:
   celery-beat:
     build: .
     command:
-      sh -c "poetry run python manage.py migrate django_celery_beat &&
-      poetry run celery -A config beat --loglevel=info --scheduler django_celery_beat.schedulers:DatabaseScheduler"
-#      poetry run python manage.py migrate django_celery_beat &&
-#      poetry run celery -A config beat --loglevel=info --scheduler django_celery_beat.schedulers:DatabaseScheduler
+#      sh -c "poetry run python manage.py migrate django_celery_beat &&
+#      poetry run celery -A config beat --loglevel=info --scheduler django_celery_beat.schedulers:DatabaseScheduler"
+      poetry run python manage.py migrate django_celery_beat &&
+      poetry run celery -A config beat --loglevel=info --scheduler django_celery_beat.schedulers:DatabaseScheduler
 #      poetry run celery -A config beat --loglevel=info
 #    restart: on-failure
     restart: unless-stopped

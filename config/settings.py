@@ -186,13 +186,13 @@ CELERY_TASK_TIME_LIMIT = 30 * 60
 DatabaseScheduler хранит все расписания задач в базе данных Django.
 Это позволяет управлять задачами через административную панель Django и изменять расписание в реальном времени.
 """
-# CELERY_BEAT_SCHEDULER = "django_celery_beat.schedulers:DatabaseScheduler"
+CELERY_BEAT_SCHEDULER = "django_celery_beat.schedulers:DatabaseScheduler"
 
 """
 PersistentScheduler хранит расписание в локальном файле celerybeat-schedule.
 Это простой вариант, но менее гибкий в управлении задачами.
 """
-CELERY_BEAT_SCHEDULER = "celery.beat.PersistentScheduler"
+# CELERY_BEAT_SCHEDULER = "celery.beat.PersistentScheduler"
 
 """
 Запуск задачи раз в день при работающем CELERY
