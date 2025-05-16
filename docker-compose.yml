@@ -2,7 +2,8 @@ services:
   web:
     build:
       dockerfile: Dockerfile
-    command: poetry run python manage.py collectstatic --noinput && gunicorn config.wsgi:application --bind 0.0.0.0:8000
+    command: sh -c "poetry run python manage.py collectstatic --noinput && poetry run python manage.py runserver 0.0.0.0:8000"
+#    command: poetry run python manage.py collectstatic --noinput && gunicorn config.wsgi:application --bind 0.0.0.0:8000
 #    command: poetry run python manage.py runserver 0.0.0.0:8000
     volumes:
       - .:/drf_project
@@ -18,6 +19,11 @@ services:
         condition: service_started
     env_file:
       - ./.env
+    healthcheck:
+      test: [ "CMD", "curl", "-f", "http://localhost:8000/health" ]
+      interval: 30s
+      timeout: 10s
+      retries: 3
 
   nginx:
     build:
@@ -57,10 +63,12 @@ services:
       retries: 5
 
   celery:
+    environment:
+      POETRY_VIRTUALENVS_CREATE: "false"
     user: "1000:1000"
     build: .
     command:
-      poetry run celery -A config worker -l INFO --concurrency=500 --pool=gevent
+      poetry run celery -A config worker -l INFO --concurrency=5 --pool=gevent
     restart: on-failure
     volumes:
       - .:/drf_project
@@ -71,6 +79,8 @@ services:
       - ./.env
 
   celery-beat:
+    environment:
+      POETRY_VIRTUALENVS_CREATE: "false"
     build: .
     command:
       sh -c "poetry run python manage.py migrate django_celery_beat &&
