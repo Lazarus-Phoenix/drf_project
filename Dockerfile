@@ -15,13 +15,11 @@ RUN apt-get update && \
 RUN pip install poetry
 
 # Копируем файлы зависимостей
-COPY poetry.lock ./
-COPY pyproject.toml ./
+COPY poetry.lock pyproject.toml ./
 
-# Устанавливаем зависимости с помощью Poetry
-RUN poetry install --no-root
-    poetry config virtualenvs.create false && \
-    poetry install --no-interaction --no-ansi
+# Устанавливаем зависимости с помощью Poetry (исправленная часть)
+RUN poetry config virtualenvs.create false && \
+    poetry install --no-interaction --no-ansi --no-root
 
 # Копируем остальные файлы проекта в контейнер
 COPY . .
