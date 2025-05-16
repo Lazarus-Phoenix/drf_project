@@ -2,8 +2,8 @@ services:
   web:
     build:
       dockerfile: Dockerfile
-#    command: poetry run python manage.py collectstatic --noinput && gunicorn config.wsgi:application --bind 0.0.0.0:8000
-    command: poetry run python manage.py runserver 0.0.0.0:8000
+    command: poetry run python manage.py collectstatic --noinput && gunicorn config.wsgi:application --bind 0.0.0.0:8000
+#    command: poetry run python manage.py runserver 0.0.0.0:8000
     volumes:
       - .:/drf_project
       - static_volume:/drf_project/staticfiles/
@@ -57,6 +57,7 @@ services:
       retries: 5
 
   celery:
+    user: "1000:1000"
     build: .
     command:
       poetry run celery -A config worker -l INFO --concurrency=500 --pool=gevent
