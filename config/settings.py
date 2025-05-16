@@ -168,7 +168,7 @@ CELERY_BROKER_URL = os.getenv(
 )  # Например, Redis, который по умолчанию работает на порту 6379
 
 # URL-адрес брокера результатов, также Redis
-CELERY_RESULT_BACKEND = os.getenv("CELERY_RESULT_BACKEND", "redis://redis:6379/0")
+CELERY_RESULT_BACKEND = os.getenv("CELERY_RESULT_BACKEND", "redis://redis:6379/1")
 
 # Часовой пояс для работы Celery
 CELERY_TIMEZONE = TIME_ZONE
@@ -186,13 +186,13 @@ CELERY_TASK_TIME_LIMIT = 30 * 60
 DatabaseScheduler хранит все расписания задач в базе данных Django.
 Это позволяет управлять задачами через административную панель Django и изменять расписание в реальном времени.
 """
-CELERY_BEAT_SCHEDULER = "django_celery_beat.schedulers:DatabaseScheduler"
+# CELERY_BEAT_SCHEDULER = "django_celery_beat.schedulers:DatabaseScheduler"
 
 """
 PersistentScheduler хранит расписание в локальном файле celerybeat-schedule.
 Это простой вариант, но менее гибкий в управлении задачами.
 """
-# CELERY_BEAT_SCHEDULER = "celery.beat.PersistentScheduler"
+CELERY_BEAT_SCHEDULER = "celery.beat.PersistentScheduler"
 
 """
 Запуск задачи раз в день при работающем CELERY
