@@ -2,8 +2,11 @@ services:
   web:
     build:
       dockerfile: Dockerfile
+    # Команда разработки на удалённом сервере
     command: sh -c "poetry run python manage.py collectstatic --noinput && poetry run python manage.py runserver 0.0.0.0:8000"
+    # команда продакшн
 #    command: poetry run python manage.py collectstatic --noinput && gunicorn config.wsgi:application --bind 0.0.0.0:8000
+  # Команда локальной разработки
 #    command: poetry run python manage.py runserver 0.0.0.0:8000
     volumes:
       - .:/drf_project
@@ -20,7 +23,7 @@ services:
     env_file:
       - ./.env
     healthcheck:
-      test: [ "CMD", "curl", "-f", "http://localhost:8000/health" ]
+      test: [ "CMD", "curl", "-f", "http://localhost:8000/" ]
       interval: 30s
       timeout: 10s
       retries: 3
@@ -63,9 +66,9 @@ services:
       retries: 5
 
   celery:
-    environment:
-      POETRY_VIRTUALENVS_CREATE: "false"
     user: "1000:1000"
+    environment:
+      C_FORCE_ROOT: "false"
     build: .
     command:
       poetry run celery -A config worker -l INFO --concurrency=5 --pool=gevent
