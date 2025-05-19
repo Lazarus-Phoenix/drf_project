@@ -75,9 +75,18 @@ jobs:
         uses: webfactory/ssh-agent@v0.9.0
         with:
           ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY }}
+
+      # Создаём .env заново
+      - name: Create .env file
+        run: |
+          echo "${{ secrets.ENV_FILE }}" > .env       
+
+      # Копируем на сервер
       - name: Copy .env to server
         run: |
           scp -o StrictHostKeyChecking=no .env ${{ secrets.SSH_USER }}@${{ secrets.SERVER_IP }}:/tmp/drf_project.env
+
+
       - name: Deploy to server
         run: |
           ssh -o StrictHostKeyChecking=no ${{ secrets.SSH_USER }}@${{ secrets.SERVER_IP }} << "EOF"
