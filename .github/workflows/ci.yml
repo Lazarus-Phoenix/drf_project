@@ -99,8 +99,6 @@ jobs:
             --env-file /tmp/drf_project.env \
             -p 80:8000 \
             ${{ secrets.DOCKER_USERNAME }}/drf_project:${{ github.sha }}
-
-        # Запускаем Nginx
           docker run -d \
             --name nginx \
             -p 80:80 \
