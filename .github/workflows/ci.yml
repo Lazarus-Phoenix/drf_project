@@ -94,16 +94,22 @@ jobs:
           docker pull ${{ secrets.DOCKER_USERNAME }}/drf_project:${{ github.sha }}
           docker stop drf_project || true
           docker rm drf_project || true
+          docker system prune -a --volumes --force
           docker run -d \
             --name drf_project \
             --env-file /tmp/drf_project.env \
             -p 80:8000 \
             ${{ secrets.DOCKER_USERNAME }}/drf_project:${{ github.sha }}
-          docker run -d \
-            --name nginx \
-            -p 80:80 \
-            -v /path/to/nginx.conf:/etc/nginx/nginx.conf \
-            -v /path/to/staticfiles:/drf_project/staticfiles \
-            --link drf_project:web \
-            nginx
+          if [ $(df / --output=pcent | tail -1 | tr -d '% ') -lt 90 ]; then
+            docker run -d \
+              --name nginx \
+              -p 80:80 \
+              -v /etc/nginx/nginx.conf:/etc/nginx/nginx.conf \
+              -v /drf_project/staticfiles:/drf_project/staticfiles \
+              --link drf_project:web \
+              nginx
+          else
+            echo "Недостаточно места для запуска Nginx!"
+            exit 1
+          fi
           EOF
