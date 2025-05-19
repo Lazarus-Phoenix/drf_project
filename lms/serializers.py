@@ -2,7 +2,7 @@ from django.core.validators import URLValidator
 from rest_framework import serializers
 from rest_framework.serializers import ModelSerializer
 
-from lms.models import Course, CourseSubscription, Lesson
+from lms.models import Course, Lesson
 from lms.validators import ExternalLinksValidator
 
 

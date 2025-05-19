@@ -7,7 +7,6 @@ from rest_framework.viewsets import ModelViewSet
 from users.services import (
     create_stripe_price,
     create_stripe_session,
-    create_stripe_product,
 )
 from users.models import CustomUser
 from users.serializers import UserSerializer

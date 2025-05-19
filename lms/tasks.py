@@ -6,15 +6,14 @@ from django.utils import timezone
 
 from config.settings import EMAIL_HOST_USER
 from lms.models import Course, CourseSubscription
-from users.models import CustomUser
 
 
 @shared_task
 def send_course_update_email(course_id):
-    """Отправка писем с сообщением об обновлении курса"""
     """
-    Временная проверка важна для предотвращения спама уведомлений. 
-    Если курс обновляется часто (менее чем раз в 4 часа), 
+    Отправка писем с сообщением об обновлении курса
+    Временная проверка важна для предотвращения спама уведомлений.
+    Если курс обновляется часто (менее чем раз в 4 часа),
     система не будет беспокоить подписчиков слишком частыми уведомлениями.
     """
     course = Course.objects.get(id=course_id)
@@ -35,4 +34,4 @@ def send_course_update_email(course_id):
                 fail_silently=False,
             )
     else:
-        print(f"Уведомление не отправлено, курс был обновлен менее 4 часов назад.")
+        print("Уведомление не отправлено, курс был обновлен менее 4 часов назад.")

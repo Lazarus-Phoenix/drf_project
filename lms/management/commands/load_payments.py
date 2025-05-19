@@ -72,12 +72,12 @@ class Command(BaseCommand):
         lessons = []
         for course in Course.objects.all():
             if len(lessons) < 6:
-                lesson_title = f"{course.title} - Lesson {len(lessons)+1}"
+                lesson_title = f"{course.title} - Lesson {len(lessons) + 1}"
                 lessons.append(
                     Lesson(
                         course=course,
                         title=lesson_title,
-                        description=f"Lesson {len(lessons)+1} for {course.title}",
+                        description=f"Lesson {len(lessons) + 1} for {course.title}",
                         preview=None,
                         video_link=None,
                     )

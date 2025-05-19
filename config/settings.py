@@ -68,11 +68,11 @@ WSGI_APPLICATION = "config.wsgi.application"
 # https://docs.djangoproject.com/en/3.2/ref/settings/#databases
 
 
-if 'test' in sys.argv:
+if "test" in sys.argv:
     DATABASES = {
-        'default': {
-            'ENGINE': 'django.db.backends.sqlite3',
-            'NAME':BASE_DIR / 'test_db.sqlite3'
+        "default": {
+            "ENGINE": "django.db.backends.sqlite3",
+            "NAME": BASE_DIR / "test_db.sqlite3",
         }
     }
 else:
@@ -119,7 +119,12 @@ USE_TZ = True
 
 
 STATIC_URL = "static/"
-STATICFILES_DIRS = [os.path.join(BASE_DIR, "static",)]
+STATICFILES_DIRS = [
+    os.path.join(
+        BASE_DIR,
+        "static",
+    )
+]
 STATIC_ROOT = os.path.join(BASE_DIR, "staticfiles")
 
 # STATIC_ROOT = "/drf_project/staticfiles/"
@@ -220,9 +225,8 @@ CACHES = {
         "OPTIONS": {
             "CLIENT_CLASS": "django_redis.client.DefaultClient",
             "SOCKET_CONNECT_TIMEOUT": 5,  # Таймаут подключения в секундах
-            "SOCKET_TIMEOUT": 5,          # Таймаут операций
-            "IGNORE_EXCEPTIONS": True,    # Продолжать работу при ошибках Redis
-        }
+            "SOCKET_TIMEOUT": 5,  # Таймаут операций
+            "IGNORE_EXCEPTIONS": True,  # Продолжать работу при ошибках Redis
+        },
     }
 }
-

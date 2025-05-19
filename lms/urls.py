@@ -2,7 +2,7 @@ from django.urls import path
 from rest_framework.routers import SimpleRouter
 
 from lms.apps import LmsConfig
-from lms.management.commands.clear_db import Command
+
 from lms.views import (
     CourseViewSet,
     LessonCreateApiView,
