@@ -100,16 +100,4 @@ jobs:
             --env-file /tmp/drf_project.env \
             -p 80:8000 \
             ${{ secrets.DOCKER_USERNAME }}/drf_project:${{ github.sha }}
-          if [ $(df / --output=pcent | tail -1 | tr -d '% ') -lt 90 ]; then
-            docker run -d \
-              --name nginx \
-              -p 80:80 \
-              -v /etc/nginx/nginx.conf:/etc/nginx/nginx.conf \
-              -v /drf_project/staticfiles:/drf_project/staticfiles \
-              --link drf_project:web \
-              nginx
-          else
-            echo "Недостаточно места для запуска Nginx!"
-            exit 1
-          fi
           EOF
