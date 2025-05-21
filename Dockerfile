@@ -24,6 +24,8 @@ RUN poetry config virtualenvs.create false && \
 # Копируем остальные файлы проекта в контейнер
 COPY . .
 
+RUN python manage.py collectstatic --noinput
+
 # Настройка переменных окружения
 ENV PYTHONUNBUFFERED=1
 ENV PYTHONDONTWRITEBYTECODE=1

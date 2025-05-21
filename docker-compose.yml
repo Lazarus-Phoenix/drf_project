@@ -11,7 +11,7 @@ services:
 #    command: poetry run python manage.py runserver 0.0.0.0:8000
     volumes:
       - .:/drf_project
-      - static_volume:/drf_project/staticfiles/
+      - static_volume:/drf_project/staticfiles
 #    ports:
 #      - "8000:8000"
     expose:
