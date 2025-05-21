@@ -71,7 +71,7 @@ jobs:
       - name: Collect static files
         run: python manage.py collectstatic --noinput
         env:
-          SECRET_KEY: "dummy_key_for_ci"
+          SECRET_KEY: ${{secrets.SECRET_KEY}}
 
       - name: Login to Docker Hub
         run: echo ${{ secrets.DOCKER_HUB_ACCESS_TOKEN }} | docker login -u ${{ secrets.DOCKER_USERNAME }} --password-stdin
