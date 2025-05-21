@@ -24,6 +24,9 @@ RUN poetry config virtualenvs.create false && \
 # Копируем остальные файлы проекта в контейнер
 COPY . .
 
+
+ARG SECRET_KEY
+ENV SECRET_KEY=$SECRET_KEY
 RUN python manage.py collectstatic --noinput
 
 # Настройка переменных окружения
