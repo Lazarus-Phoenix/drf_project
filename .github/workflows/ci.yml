@@ -123,7 +123,7 @@ jobs:
       - name: Deploy to server
         run: |
           ssh -o StrictHostKeyChecking=no -vT ${{ secrets.SSH_USER }}@${{ secrets.SERVER_IP }} << 'EOF'
-            cd ${{ secrets.DEPLOY_DIR }}
+            cd drf_project
             sudo docker compose down
             sudo docker container prune -f
             sudo docker compose up -d
