@@ -36,7 +36,7 @@ services:
     build:
       context: ./nginx
     ports:
-      - "80:80"
+      - "8000:80"
     volumes:
       - ./staticfiles:/drf_project/staticfiles:ro
       - ./nginx/conf.d:/etc/nginx/conf.d:ro
