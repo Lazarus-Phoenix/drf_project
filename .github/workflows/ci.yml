@@ -123,14 +123,6 @@ jobs:
       - name: Deploy to server
         run: |
           ssh ${{ secrets.SSH_USER }}@${{ secrets.SERVER_IP }} << 'EOF'
-            # Останавливаем и запрещаем автозапуск системного Nginx
-            sudo systemctl stop nginx || true
-            sudo systemctl disable nginx || true  # Чтобы не запускался при перезагрузке
-            
-            # Убиваем процессы, занимающие порт 80 (если Nginx не остановился)
-            sudo pkill -9 nginx || true
-            sudo fuser -k 80/tcp || true
-            
             cd drf_project
             sudo docker compose down
             sudo docker compose up -d
