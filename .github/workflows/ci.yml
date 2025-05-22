@@ -129,6 +129,7 @@ jobs:
             echo "ERROR: Failed to pull image"
             exit 1
           }
+          
           # Удаляем ТОЛЬКО старый контейнер (без очистки образов)
           docker stop drf_project || true
           docker rm drf_project || true
@@ -138,4 +139,11 @@ jobs:
             --env-file /tmp/drf_project.env \
             -p 80:8000 \
             ${{ secrets.DOCKER_USERNAME }}/drf_project:${{ github.sha }}
+          
+          # Ждем 10 секунд, чтобы контейнер успел запуститься
+          sleep 10
+          
+          # Применяем миграции и собираем статику
+          docker exec drf_project python manage.py migrate --noinput
+          docker exec drf_project python manage.py collectstatic --noinput
           EOF
