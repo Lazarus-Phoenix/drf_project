@@ -59,7 +59,9 @@ jobs:
       # Создаём .env заново
       - name: Create .env file
         run: |
-          echo "${{ secrets.ENV_FILE }}" > .env
+          touch .env
+          echo '"${{ secrets.ENV_FILE }}"' | sed "s/\"//g" > .env
+
 
       # Копируем на сервер
       - name: Copy .env to server
