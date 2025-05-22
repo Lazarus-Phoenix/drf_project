@@ -24,10 +24,12 @@ RUN poetry config virtualenvs.create false && \
 # Копируем остальные файлы проекта в контейнер
 COPY . .
 
+RUN --mount=type=secret,id=SECRET_KEY \
+    export SECRET_KEY=$(cat /run/secrets/SECRET_KEY) && \
+    python manage.py collectstatic --noinput && \
+    unset SECRET_KEY
 
-ARG SECRET_KEY
-ENV SECRET_KEY=$SECRET_KEY
-RUN python manage.py collectstatic --noinput
+# RUN python manage.py collectstatic --noinput
 
 # Настройка переменных окружения
 ENV PYTHONUNBUFFERED=1
