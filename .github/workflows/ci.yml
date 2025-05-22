@@ -120,14 +120,14 @@ jobs:
         run: |
           scp -o StrictHostKeyChecking=no .env ${{ secrets.SSH_USER }}@${{ secrets.SERVER_IP }}:/tmp/drf_project.env
 
-      - name: Deploy to Server
-        run: |
-          ssh -o StrictHostKeyChecking=no -vT ${{ secrets.SSH_USER }}@${{ secrets.SERVER_IP }} << 'EOF'
-            sudo docker pull ${{ secrets.DOCKER_HUB_USERNAME }}/drf_project:${{ github.sha }}
-            sudo docker stop drf_project || true
-            sudo docker rm drf_project || true
-            sudo docker run -d --name drf_project -p 80:8000 ${{ secrets.DOCKER_HUB_USERNAME }}/drf_project:${{ github.sha }}
-          EOF
+#      - name: Deploy to Server
+#        run: |
+#          ssh -o StrictHostKeyChecking=no -vT ${{ secrets.SSH_USER }}@${{ secrets.SERVER_IP }} << 'EOF'
+#            sudo docker pull ${{ secrets.DOCKER_HUB_USERNAME }}/drf_project:${{ github.sha }}
+#            sudo docker stop drf_project || true
+#            sudo docker rm drf_project || true
+#            sudo docker run -d --name drf_project -p 80:8000 ${{ secrets.DOCKER_HUB_USERNAME }}/drf_project:${{ github.sha }}
+#          EOF
 
 #      - name: Deploy to server
 #        run: |
@@ -138,29 +138,29 @@ jobs:
 #          EOF
   
 
-#      - name: Deploy to server
-#        run: |
-#          ssh ${{ secrets.SSH_USER }}@${{ secrets.SERVER_IP }} << "EOF"
-#          echo "${{ secrets.DOCKER_HUB_ACCESS_TOKEN }}" | docker login -u ${{ secrets.DOCKER_USERNAME }} --password-stdin
-#          docker pull ${{ secrets.DOCKER_USERNAME }}/drf_project:${{ github.sha }} || {
-#            echo "ERROR: Failed to pull image"
-#            exit 1
-#          }
-#
-#          # Удаляем ТОЛЬКО старый контейнер (без очистки образов)
-#          docker stop drf_project || true
-#          docker rm drf_project || true
-#          # Запускаем новый контейнер
-#          docker run -d \
-#            --name drf_project \
-#            --env-file /tmp/drf_project.env \
-#            -p 80:8000 \
-#            ${{ secrets.DOCKER_USERNAME }}/drf_project:${{ github.sha }}
-#
-#          # Ждем 10 секунд, чтобы контейнер успел запуститься
-#          sleep 10
-#
-#          # Применяем миграции и собираем статику
-#          docker exec drf_project python manage.py migrate --noinput
-#          docker exec drf_project python manage.py collectstatic --noinput
-#          EOF
+      - name: Deploy to server
+        run: |
+          ssh ${{ secrets.SSH_USER }}@${{ secrets.SERVER_IP }} << "EOF"
+          echo "${{ secrets.DOCKER_HUB_ACCESS_TOKEN }}" | docker login -u ${{ secrets.DOCKER_USERNAME }} --password-stdin
+          docker pull ${{ secrets.DOCKER_USERNAME }}/drf_project:${{ github.sha }} || {
+            echo "ERROR: Failed to pull image"
+            exit 1
+          }
+
+          # Удаляем ТОЛЬКО старый контейнер (без очистки образов)
+          docker stop drf_project || true
+          docker rm drf_project || true
+          # Запускаем новый контейнер
+          docker run -d \
+            --name drf_project \
+            --env-file /tmp/drf_project.env \
+            -p 80:8000 \
+            ${{ secrets.DOCKER_USERNAME }}/drf_project:${{ github.sha }}
+
+          # Ждем 10 секунд, чтобы контейнер успел запуститься
+          sleep 10
+
+          # Применяем миграции и собираем статику
+          docker exec drf_project python manage.py migrate --noinput
+          docker exec drf_project python manage.py collectstatic --noinput
+          EOF
