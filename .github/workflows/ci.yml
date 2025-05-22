@@ -76,8 +76,18 @@ jobs:
       - name: Debug static files
         run: ls -la ./static
 
+      - name: Prepare static directories
+        run: |
+          # Создаем обе папки с правильными правами
+          mkdir -p ./static ./staticfiles
+          chmod 755 ./static ./staticfiles
+          
+          # Для отладки: проверяем структуру
+          ls -la
+          tree -L 3 || echo "Tree not installed"
+
       - name: Collect static files
-        run: python manage.py collectstatic --noinput
+        run: python manage.py collectstatic --noinput --verbosity 3
         env:
           SECRET_KEY: ${{secrets.SECRET_KEY}}
           DJANGO_SETTINGS_MODULE: "config.settings"

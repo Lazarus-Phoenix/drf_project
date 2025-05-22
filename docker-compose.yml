@@ -10,8 +10,10 @@ services:
   # Команда локальной разработки
 #    command: poetry run python manage.py runserver 0.0.0.0:8000
     volumes:
-      - .:/drf_project
-      - static_volume:/drf_project/staticfiles
+      - ./staticfiles:/drf_project/staticfiles:rw
+      - ./static:/drf_project/static:ro
+#      - .:/drf_project
+#      - static_volume:/drf_project/staticfiles
 #    ports:
 #      - "8000:8000"
     expose:
@@ -35,8 +37,10 @@ services:
     ports:
       - "80:80"
     volumes:
-      - ./nginx/nginx.conf:/etc/nginx/nginx.conf
-      - static_volume:/drf_project/staticfiles/
+      - ./staticfiles:/drf_project/staticfiles:ro
+      - ./nginx/conf.d:/etc/nginx/conf.d:ro
+#      - ./nginx/nginx.conf:/etc/nginx/nginx.conf
+#      - static_volume:/drf_project/staticfiles/
     depends_on:
       - web
 
