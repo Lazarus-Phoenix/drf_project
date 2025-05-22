@@ -37,7 +37,7 @@ services:
     build:
       context: ./nginx
     ports:
-      - "80:80"  # или "8080:80", если 80 порт занят
+      []
     volumes:
       - ./staticfiles:/drf_project/staticfiles:ro
       - ./nginx/conf.d:/etc/nginx/conf.d:ro
