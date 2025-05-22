@@ -123,6 +123,9 @@ jobs:
       - name: Deploy to server
         run: |
           ssh -o StrictHostKeyChecking=no -vT ${{ secrets.SSH_USER }}@${{ secrets.SERVER_IP }} << 'EOF'
+            # Останавливаем конфликтующий сервис (если нужно)
+            sudo systemctl stop nginx || true
+
             cd drf_project
             sudo docker compose down
             sudo docker container prune -f
