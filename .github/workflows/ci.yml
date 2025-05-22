@@ -99,8 +99,14 @@ jobs:
         run: |
           echo "${{ secrets.SECRET_KEY }}" > secret_key.txt
           docker build --secret id=SECRET_KEY,src=secret_key.txt -t ${{ secrets.DOCKER_USERNAME }}/drf_project:${{ github.sha }} .
-          rm secret_key.txt
-          docker push ${{ secrets.DOCKER_USERNAME }}/drf_project:${{ github.sha }}
+          rm -f secret_key.txt 
+
+#      - name: Build and push
+#        run: |
+#          echo "${{ secrets.SECRET_KEY }}" > secret_key.txt
+#          docker build --secret id=SECRET_KEY,src=secret_key.txt -t ${{ secrets.DOCKER_USERNAME }}/drf_project:${{ github.sha }} .
+#          rm secret_key.txt
+#          docker push ${{ secrets.DOCKER_USERNAME }}/drf_project:${{ github.sha }}
 
   deploy:
     needs: build

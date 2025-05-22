@@ -24,12 +24,19 @@ RUN poetry config virtualenvs.create false && \
 # Копируем остальные файлы проекта в контейнер
 COPY . .
 
-RUN mkdir -p /drf_project/staticfiles && \
+RUN --mount=type=secret,id=SECRET_KEY \
+    mkdir -p /drf_project/staticfiles && \
     chown -R 1000:1000 /drf_project && \
-    --mount=type=secret,id=SECRET_KEY \
     export SECRET_KEY=$(cat /run/secrets/SECRET_KEY) && \
     python manage.py collectstatic --noinput && \
     unset SECRET_KEY
+
+# RUN mkdir -p /drf_project/staticfiles && \
+#     chown -R 1000:1000 /drf_project && \
+#     --mount=type=secret,id=SECRET_KEY \
+#     export SECRET_KEY=$(cat /run/secrets/SECRET_KEY) && \
+#     python manage.py collectstatic --noinput && \
+#     unset SECRET_KEY
 
 # RUN --mount=type=secret,id=SECRET_KEY \
 #     export SECRET_KEY=$(cat /run/secrets/SECRET_KEY) && \
