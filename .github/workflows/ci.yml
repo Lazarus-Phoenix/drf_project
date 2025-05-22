@@ -49,38 +49,36 @@ jobs:
         env:
           SECRET_KEY: test_secret_key
 
-
-
-  deploy:
+  build:
     needs: tests
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout code
+      - name: Check out code
         uses: actions/checkout@v3
 
+      # Создаём .env заново
+      - name: Create .env file
+        run: |
+          echo "${{ secrets.ENV_FILE }}" > .env
+
+      # Копируем на сервер
+      - name: Copy .env to server
+        run: |
+          scp -o StrictHostKeyChecking=no .env ${{ secrets.SSH_USER }}@${{ secrets.SERVER_IP }}:/tmp/drf_project.env
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
       - name: Set up SSH
         uses: webfactory/ssh-agent@v0.9.0
         with:
           ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY }}
 
-      - name: Create .env file
-        run: |
-          touch .env
-          echo '"${{ secrets.ENV_FILE }}"' | sed "s/\"//g" > .env
-
-      - name: copy env file
-        uses: appleboy/scp-action@v1
-        with:
-          host: ${{ secrets.SERVER_IP }}
-          username: ${{ secrets.SSH_USER }}
-          key: ${{ secrets.SSH_PRIVATE_KEY }}
-          source: "*"
-          target: ${{ secrets.DEPLOY_DIR }}
-
       - name: Deploy to server
         run: |
           ssh -o StrictHostKeyChecking=no ${{ secrets.SSH_USER }}@${{ secrets.SERVER_IP }} << 'EOF'
-          cd /path/to/project
+          cd ${{ secrets.DEPLOY_DIR }}
           git fetch origin
           git reset --hard origin/feature2
           docker compose down
@@ -140,24 +138,24 @@ jobs:
 #          rm secret_key.txt
 #          docker push ${{ secrets.DOCKER_USERNAME }}/drf_project:${{ github.sha }}
 
-#  deploy:
-#    needs: build
-#    runs-on: ubuntu-latest
-#    steps:
-#      - name: Set up SSH
-#        uses: webfactory/ssh-agent@v0.9.0
-#        with:
-#          ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY }}
+#deploy:
+#  needs: build
+#  runs-on: ubuntu-latest
+#  steps:
+#    - name: Set up SSH
+#      uses: webfactory/ssh-agent@v0.9.0
+#      with:
+#        ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY }}
 #
-#      # Создаём .env заново
-#      - name: Create .env file
-#        run: |
-#          echo "${{ secrets.ENV_FILE }}" > .env
+#    # Создаём .env заново
+#    - name: Create .env file
+#      run: |
+#        echo "${{ secrets.ENV_FILE }}" > .env
 #
-#      # Копируем на сервер
-#      - name: Copy .env to server
-#        run: |
-#          scp -o StrictHostKeyChecking=no .env ${{ secrets.SSH_USER }}@${{ secrets.SERVER_IP }}:/tmp/drf_project.env
+#    # Копируем на сервер
+#    - name: Copy .env to server
+#      run: |
+#        scp -o StrictHostKeyChecking=no .env ${{ secrets.SSH_USER }}@${{ secrets.SERVER_IP }}:/tmp/drf_project.env
 #
 #
 #      - name: Deploy to server
