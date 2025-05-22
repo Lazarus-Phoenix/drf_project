@@ -120,13 +120,22 @@ jobs:
         run: |
           scp -o StrictHostKeyChecking=no .env ${{ secrets.SSH_USER }}@${{ secrets.SERVER_IP }}:/tmp/drf_project.env
 
-      - name: Deploy to server
+      - name: Deploy to Server
         run: |
-          ssh ${{ secrets.SSH_USER }}@${{ secrets.SERVER_IP }} << 'EOF'
-            cd drf_project
-            sudo docker compose down
-            sudo docker compose up -d
+          ssh -o StrictHostKeyChecking=no -vT ${{ secrets.SSH_USER }}@${{ secrets.SERVER_IP }} << 'EOF'
+            sudo docker pull ${{ secrets.DOCKER_HUB_USERNAME }}/drf_project:${{ github.sha }}
+            sudo docker stop drf_project || true
+            sudo docker rm drf_project || true
+            sudo docker run -d --name drf_project -p 80:8000 ${{ secrets.DOCKER_HUB_USERNAME }}/drf_project:${{ github.sha }}
           EOF
+
+#      - name: Deploy to server
+#        run: |
+#          ssh ${{ secrets.SSH_USER }}@${{ secrets.SERVER_IP }} << 'EOF'
+#            cd drf_project
+#            sudo docker compose down
+#            sudo docker compose up -d
+#          EOF
   
 
 #      - name: Deploy to server
