@@ -131,7 +131,7 @@ jobs:
           }
           docker stop drf_project || true
           docker rm drf_project || true
-          
+          docker system prune -a --volumes --force
           docker run -d \
             --name drf_project \
             --env-file /tmp/drf_project.env \
