@@ -135,7 +135,7 @@ jobs:
           docker run -d \
             --name drf_project \
             --env-file /tmp/drf_project.env \
-            -p 80:8000 \
+            -p 8080:80 \
             -v drf_project_static:/drf_project/staticfiles \
             ${{ secrets.DOCKER_USERNAME }}/drf_project:${{ github.sha }}
           EOF
