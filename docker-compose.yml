@@ -3,7 +3,7 @@ services:
     build:
       dockerfile: Dockerfile
     # Команда разработки на удалённом сервере
-    command: sh -c "poetry run python manage.py collectstatic --noinput && poetry run gunicorn config.wsgi:application --bind 0.0.0.0:8000"
+    command: sh -c "poetry run python manage.py migrate --noinput && poetry run python manage.py collectstatic --noinput && poetry run gunicorn config.wsgi:application --bind 0.0.0.0:8000"
 #    command: sh -c "poetry run python manage.py collectstatic --noinput && poetry run python manage.py runserver 0.0.0.0:8000"
     # команда продакшн
 #    command: poetry run python manage.py collectstatic --noinput && gunicorn config.wsgi:application --bind 0.0.0.0:8000
@@ -88,12 +88,14 @@ services:
     user: "1000:1000"
     environment:
       C_FORCE_ROOT: "false"
+      POETRY_VIRTUALENVS_CREATE: "false"
     build: .
-    command:
-      poetry run celery -A config worker -l INFO --concurrency=5 --pool=gevent
+      sh -c "poetry install --no-root && celery -A config worker -l INFO --concurrency=5 --pool=gevent"
+#    command:
+#      poetry run celery -A config worker -l INFO --concurrency=5 --pool=gevent
     restart: on-failure
     volumes:
-      - .:/drf_project
+      - .:/drf_project:rw
     depends_on:
       - redis
       - db
