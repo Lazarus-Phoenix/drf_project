@@ -138,12 +138,6 @@ jobs:
             -p 80:8000 \
             -v drf_project_static:/drf_project/staticfiles \
             ${{ secrets.DOCKER_USERNAME }}/drf_project:${{ github.sha }}
-          
-          # Пауза перед миграцией
-          sleep 10
-          
-          # Run migrations
-          docker exec drf_project python manage.py migrate --noinput
           EOF
 
 #      - name: Deploy to Server
