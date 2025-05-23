@@ -90,6 +90,7 @@ services:
       C_FORCE_ROOT: "false"
       POETRY_VIRTUALENVS_CREATE: "false"
     build: .
+    command:
       sh -c "poetry install --no-root && celery -A config worker -l INFO --concurrency=5 --pool=gevent"
 #    command:
 #      poetry run celery -A config worker -l INFO --concurrency=5 --pool=gevent
